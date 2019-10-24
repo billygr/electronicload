@@ -15,6 +15,7 @@ before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 install:
   # Note that every library should be installed in a seperate command
+  - arduino --install-library "Encoder"
   - arduino --install-library "LiquidCrystal_PCF8574"
 script:
   - build_platform uno
