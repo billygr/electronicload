@@ -51,7 +51,7 @@ const int LOOP_MAX_COUNT = 2000;
 int DACGain = 1; //default gain 1xVref. 
 
 int loadMode = 0; // 0: Constant Current, 1: Constant Power
-const float EXT_REF_VOLTAGE = 0.333;
+const float EXT_REF_VOLTAGE = 0.333; // MPC4921 Reference voltage used, adjust it using the trimmer
 
 // Setup of display and encoder
 LiquidCrystal_PCF8574 lcd(I2Cadr);  //set up the LCD address
@@ -143,7 +143,7 @@ void displayStatus()
     if (loadMode == 0) //Constant Current
     {
         float vSense = 1.0 * encoderValue / 4096.0 * EXT_REF_VOLTAGE;
-        float i = 3 * 10 * vSense; // 3 sets of MOSFET in parallel, 0.1 ohm
+        float i = 3 * 10 * vSense; // 3 sets of MOSFET in parallel, 0.1 ohm. TODO: Change it to 2 sets of MOSFET
         if  (DACGain == 0) i *=2; // x2
     
         lcd.print("CI,I Set=");
@@ -166,7 +166,7 @@ void displayStatus()
             //sets of MOSFETS, the results are devided
             //by 3 and multipled by the value of the sense
             //resistor
-            float vSense = setCurrent / 3.0 * 0.1;
+            float vSense = setCurrent / 3.0 * 0.1; //TODO: Change it to 2 sets of MOSFET
           
             DACSetValue = (int) (vSense/EXT_REF_VOLTAGE * 4096.0 + 0.5);
 
