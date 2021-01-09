@@ -53,6 +53,10 @@ int DACGain = 1; //default gain 1xVref.
 int loadMode = 0; // 0: Constant Current, 1: Constant Power
 const float EXT_REF_VOLTAGE = 0.333; // MPC4921 Reference voltage used, adjust it using the trimmer
 
+// Voltage divider on A3 pin
+const float RA = 0.974
+const float RB = 21.91
+ 
 // Setup of display and encoder
 LiquidCrystal_PCF8574 lcd(I2Cadr);  //set up the LCD address
 Encoder currentAdjEnc(2, 3); //encoder connected to pins 2 & 3
@@ -138,7 +142,7 @@ void displayStatus()
     lcd.clear();     
 
     //average load voltage
-    vLoad = ADSum * 1.0 / (float) LOOP_MAX_COUNT / 1024.0 * 5.0  * (0.974 + 21.91) / 0.974;
+    vLoad = ADSum * 1.0 / (float) LOOP_MAX_COUNT / 1024.0 * 5.0  * (0.974 + 21.91) / 0.974; //(RA+RB)/RB
 
     if (loadMode == 0) //Constant Current
     {
