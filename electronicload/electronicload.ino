@@ -224,6 +224,8 @@ void loop()
                         //reset output current to 0
                            encoderValue = 0;
                            DACSetValue = 0;
+                        //was missing setting the actual output current 0
+                           setDACOutput(0);
                            break; 
                         case IDX_BTN_RANGE_X2:
                         //switch between 100W/200W maximum power mode
