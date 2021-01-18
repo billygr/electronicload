@@ -54,9 +54,12 @@ int loadMode = 0; // 0: Constant Current, 1: Constant Power
 const float EXT_REF_VOLTAGE = 0.333; // MPC4921 Reference voltage used, adjust it using the trimmer
 
 // Voltage divider on A3 pin
-const float RA = 0.974
-const float RB = 21.91
- 
+//(calculated for max 60 Volts = > 5V ADC, R1=1K, R2=12K max ADC 4.615)
+// Measure the actual values of the resistors you will use in KO
+const float RB = 1.004;
+const float RA = 11.91;
+// RA is the one with the pin on ground, like the R2 in the voltage divider
+
 // Setup of display and encoder
 LiquidCrystal_PCF8574 lcd(I2Cadr);  //set up the LCD address
 Encoder currentAdjEnc(2, 3); //encoder connected to pins 2 & 3
@@ -142,12 +145,12 @@ void displayStatus()
     lcd.clear();     
 
     //average load voltage
-    vLoad = ADSum * 1.0 / (float) LOOP_MAX_COUNT / 1024.0 * 5.0  * (0.974 + 21.91) / 0.974; //(RA+RB)/RB
+    vLoad = ADSum * 1.0 / (float) LOOP_MAX_COUNT / 1024.0 * 5.0  * (RA+RB) / RB; //(RA+RB)/RB
 
     if (loadMode == 0) //Constant Current
     {
         float vSense = 1.0 * encoderValue / 4096.0 * EXT_REF_VOLTAGE;
-        float i = 3 * 10 * vSense; // 3 sets of MOSFET in parallel, 0.1 ohm. TODO: Change it to 2 sets of MOSFET
+        float i = 2 * 10 * vSense; // 3 sets of MOSFET in parallel, 0.1 ohm. FIXED: Change it to 2 sets of MOSFET
         if  (DACGain == 0) i *=2; // x2
     
         lcd.print("CI,I Set=");
@@ -170,7 +173,7 @@ void displayStatus()
             //sets of MOSFETS, the results are devided
             //by 3 and multipled by the value of the sense
             //resistor
-            float vSense = setCurrent / 3.0 * 0.1; //TODO: Change it to 2 sets of MOSFET
+            float vSense = setCurrent / 2.0 * 0.1; //FIXED: Change it to 2 sets of MOSFET
           
             DACSetValue = (int) (vSense/EXT_REF_VOLTAGE * 4096.0 + 0.5);
 
