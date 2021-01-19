@@ -135,7 +135,7 @@ void setDACOutput(unsigned int val)
 }
 
 void displayStatus()
-
+{
     lcd.clear();
 
     //average load voltage
